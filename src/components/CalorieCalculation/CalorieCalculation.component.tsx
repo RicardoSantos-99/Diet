@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { MainContainer,
 InputContainer, 
@@ -14,77 +14,77 @@ ListFoods,
 TextFood,
 } from './CalorieCalculation.styled';
 
-const CalorieCalculation = () => {
-  // Lista de alimentos selecionados
-  const [selectedFoods, setSelectedFoods] = useState([]);
+interface Food {
+  name: string;
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+}
 
-  // Valor do input
-  const [inputValue, setInputValue] = useState('');
+const calculateTotalNutrition = (selectedFoods: Food[]) => {
+  const total = selectedFoods.reduce((acc, food: Food) => {
+    acc.calories += food.calories;
+    acc.protein += food.protein;
+    acc.carbohydrates += food.carbohydrates;
+    acc.fat += food.fat;
+    return acc;
+  }, { calories: 0, protein: 0, carbohydrates: 0, fat: 0 });
 
-  // Lista de alimentos sugeridos com informações nutricionais
-  const suggestions = [
+  return {
+    calories: total.calories.toFixed(2).replace('.', ','),
+    protein: total.protein.toFixed(2).replace('.', ','),
+    carbohydrates: total.carbohydrates.toFixed(2).replace('.', ','),
+    fat: total.fat.toFixed(2).replace('.', ',')
+  };
+}
+
+const getSuggestionsFromApi  = (): Food[] => {
+  const suggestions: Food[] = [
     { name: 'Apple', calories: 52, protein: 0.3, carbohydrates: 13.8, fat: 0.2 },
     { name: 'Banana', calories: 89, protein: 1.1, carbohydrates: 22.8, fat: 0.3 },
     { name: 'Orange', calories: 47, protein: 0.9, carbohydrates: 11.8, fat: 0.1 },
     { name: 'Pear', calories: 57, protein: 0.4, carbohydrates: 15.2, fat: 0.2 },
     { name: 'Grapes', calories: 69, protein: 0.6, carbohydrates: 18.1, fat: 0.2 },
   ];
+  return suggestions;
+}
 
-  // Função para obter sugestões com base no valor digitado
-  const getSuggestions = (inputValue) => {
+const CalorieCalculation = () => {
+  const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
+  const [inputValue, setInputValue] = useState('');
+
+  const suggestions = useMemo(() => getSuggestionsFromApi(), []);
+
+  const getSuggestions = useCallback((inputValue: string): Food[] => {
     const inputValueLower = inputValue.trim().toLowerCase();
     return suggestions.filter(food => food.name.toLowerCase().includes(inputValueLower));
-  };
+  }, [suggestions]);
 
-  // Função chamada ao alterar o valor do campo de entrada
-  const onChange = (event, { newValue }) => {
+  const onChange = useCallback((_event: React.FormEvent<HTMLElement>, { newValue }: { newValue: string }) => {
     setInputValue(newValue);
-  };
+  }, []);
 
-  // Função chamada ao clicar em uma sugestão
-  const onSuggestionSelected = (event, { suggestion }) => {
-    // Adiciona o alimento selecionado à lista de alimentos
-    selectedFoods.length < 17 ? setSelectedFoods([...selectedFoods, suggestion]) : setSelectedFoods
-    setInputValue(''); // Limpa o valor do input após a seleção
-  };
+  const onSuggestionSelected = useCallback((_event: any, { suggestion }: { suggestion: Food }) => {
+    setSelectedFoods(current => current.length < 17 ? [...current, suggestion] : current);
+    setInputValue('');
+  }, []);
 
-  // Função chamada para renderizar uma sugestão
-  const renderSuggestion = (suggestion) => {
-    return (
-      <div style={{color: 'red'}}>
-        {suggestion.name}
-      </div>
-    );
-  };
+  const renderSuggestion = useCallback((suggestion: Food) => (
+    <div style={{color: 'red'}}>
+      {suggestion.name}
+    </div>
+  ), []);
 
-  // Função para remover um alimento selecionado
-  const removeSelectedFood = (index) => {
-    const newSelectedFoods = [...selectedFoods];
-    newSelectedFoods.splice(index, 1);
-    setSelectedFoods(newSelectedFoods);
-  };
+  const removeSelectedFood = useCallback((index: number) => {
+    setSelectedFoods(current => {
+      const newSelectedFoods = [...current];
+      newSelectedFoods.splice(index, 1);
+      return newSelectedFoods;
+    });
+  }, []);
 
-  // Calcula a soma das informações nutricionais para os alimentos selecionados
-  const calculateTotalNutrition = () => {
-    const total = selectedFoods.reduce((acc, food) => {
-      acc.calories += food.calories;
-      acc.protein += food.protein;
-      acc.carbohydrates += food.carbohydrates;
-      acc.fat += food.fat;
-      return acc;
-    }, { calories: 0, protein: 0, carbohydrates: 0, fat: 0 });
-
-    // Arredonda as informações nutricionais para duas casas decimais usando vírgula como separador decimal
-    return {
-      calories: total.calories.toFixed(2).replace('.', ','),
-      protein: total.protein.toFixed(2).replace('.', ','),
-      carbohydrates: total.carbohydrates.toFixed(2).replace('.', ','),
-      fat: total.fat.toFixed(2).replace('.', ',')
-    };
-  };
-
-  // Calcula as informações nutricionais totais
-  const totalNutrition = calculateTotalNutrition();
+  const totalNutrition = useMemo(() => calculateTotalNutrition(selectedFoods), [selectedFoods]);
 
   return (
     <MainContainer>
