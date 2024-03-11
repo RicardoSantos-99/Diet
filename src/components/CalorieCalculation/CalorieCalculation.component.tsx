@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { MainContainer,
 InputContainer, 
@@ -13,52 +13,29 @@ TextFat,
 ListFoods,
 TextFood,
 } from './CalorieCalculation.styled';
-
-interface Food {
-  name: string;
-  calories: number;
-  protein: number;
-  carbohydrates: number;
-  fat: number;
-}
-
-const calculateTotalNutrition = (selectedFoods: Food[]) => {
-  const total = selectedFoods.reduce((acc, food: Food) => {
-    acc.calories += food.calories;
-    acc.protein += food.protein;
-    acc.carbohydrates += food.carbohydrates;
-    acc.fat += food.fat;
-    return acc;
-  }, { calories: 0, protein: 0, carbohydrates: 0, fat: 0 });
-
-  return {
-    calories: total.calories.toFixed(2).replace('.', ','),
-    protein: total.protein.toFixed(2).replace('.', ','),
-    carbohydrates: total.carbohydrates.toFixed(2).replace('.', ','),
-    fat: total.fat.toFixed(2).replace('.', ',')
-  };
-}
-
-const getSuggestionsFromApi  = (): Food[] => {
-  const suggestions: Food[] = [
-    { name: 'Apple', calories: 52, protein: 0.3, carbohydrates: 13.8, fat: 0.2 },
-    { name: 'Banana', calories: 89, protein: 1.1, carbohydrates: 22.8, fat: 0.3 },
-    { name: 'Orange', calories: 47, protein: 0.9, carbohydrates: 11.8, fat: 0.1 },
-    { name: 'Pear', calories: 57, protein: 0.4, carbohydrates: 15.2, fat: 0.2 },
-    { name: 'Grapes', calories: 69, protein: 0.6, carbohydrates: 18.1, fat: 0.2 },
-  ];
-  return suggestions;
-}
+import FoodService from './FoodService';
+import { Food } from './FoodInterface';
 
 const CalorieCalculation = () => {
   const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [suggestions, setSuggestions] = useState<Food[]>([]);
 
-  const suggestions = useMemo(() => getSuggestionsFromApi(), []);
+  const foodService = new FoodService();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const apiSuggestions = await foodService.getFoodFromApi()
+      console.log(apiSuggestions, 'apiSuggestions');
+      setSuggestions(apiSuggestions);
+    };
+
+    fetchData();
+  }, []);
 
   const getSuggestions = useCallback((inputValue: string): Food[] => {
-    const inputValueLower = inputValue.trim().toLowerCase();
-    return suggestions.filter(food => food.name.toLowerCase().includes(inputValueLower));
+    return foodService.getFilteredFoods(suggestions, inputValue);
+
   }, [suggestions]);
 
   const onChange = useCallback((_event: React.FormEvent<HTMLElement>, { newValue }: { newValue: string }) => {
@@ -76,15 +53,17 @@ const CalorieCalculation = () => {
     </div>
   ), []);
 
-  const removeSelectedFood = useCallback((index: number) => {
+  const removeSelectedFood = useCallback((index: string) => {
     setSelectedFoods(current => {
       const newSelectedFoods = [...current];
-      newSelectedFoods.splice(index, 1);
+      const indexToRemove = newSelectedFoods.findIndex(food => food.id === index);
+      newSelectedFoods.splice(indexToRemove, 1);
+
       return newSelectedFoods;
     });
   }, []);
 
-  const totalNutrition = useMemo(() => calculateTotalNutrition(selectedFoods), [selectedFoods]);
+  const totalNutrition = useMemo(() => foodService.calculateTotalNutrition(selectedFoods), [selectedFoods]);
 
   return (
     <MainContainer>
@@ -115,8 +94,8 @@ const CalorieCalculation = () => {
       <ListContainer>
         <h3>Alimentos Selecionados:</h3>
         <div>
-          {selectedFoods.map((food, index) => (
-            <ListFoods key={index} onClick={() => removeSelectedFood(index)}>
+          {selectedFoods.map((food, _index) => (
+            <ListFoods key={food.id} onClick={() => removeSelectedFood(food.id)}>
               <TextFood>{food.name}</TextFood> - 
               {' '}<TextCalories>{food.calories.toFixed(2).replace('.', ',')} kcal</TextCalories> - 
               {' '}<TextProtein>{food.protein.toFixed(2).replace('.', ',')} g</TextProtein> - 
