@@ -5,6 +5,7 @@ InputContainer,
 ListContainer, 
 TableContainer, 
 Nutricional, 
+SaveButton,
 Information,
 TextCalories,
 TextCarbohydrates,
@@ -20,13 +21,14 @@ const CalorieCalculation = () => {
   const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<Food[]>([]);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipMessage, setTooltipMessage] = useState('');
 
   const foodService = new FoodService();
 
   useEffect(() => {
     const fetchData = async () => {
       const apiSuggestions = await foodService.getFoodFromApi()
-      console.log(apiSuggestions, 'apiSuggestions');
       setSuggestions(apiSuggestions);
     };
 
@@ -62,6 +64,21 @@ const CalorieCalculation = () => {
       return newSelectedFoods;
     });
   }, []);
+
+  
+  const saveDiet = useCallback(async () => {
+    try {
+      await foodService.saveDiet(selectedFoods);
+      console.log('Dieta salva com sucesso!')
+      setTooltipMessage('Dieta salva com sucesso!');
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 3000); 
+    } catch (error) {
+      setTooltipMessage('Erro ao salvar dieta. Tente novamente.');
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 3000);
+    }
+  }, [selectedFoods]);
 
   const totalNutrition = useMemo(() => foodService.calculateTotalNutrition(selectedFoods), [selectedFoods]);
 
@@ -122,6 +139,25 @@ const CalorieCalculation = () => {
             Gordura: <TextFat>{totalNutrition.fat} g</TextFat>
           </Nutricional>
         </Information>
+        <SaveButton onClick={saveDiet}>
+          Salvar Dieta
+           {showTooltip && (
+            <div style={{
+              display: 'block',
+              position: 'absolute',
+              top: '100px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: '5px',
+              backgroundColor: 'black',
+              color: 'white',
+              borderRadius: '4px',
+              whiteSpace: 'nowrap',
+            }}>
+              {tooltipMessage}
+            </div>
+          )}
+        </SaveButton>
       </TableContainer>
     </MainContainer>
   );
