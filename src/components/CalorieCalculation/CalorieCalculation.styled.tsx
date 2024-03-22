@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from 'styled-components';
 
 export const MainContainer = styled.nav`
     width: 80%;
@@ -75,10 +75,27 @@ export const Nutricional = styled.p`
     }
 `
 
+export const SaveButton = styled.button`
+  padding: 10px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white; 
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  @media (max-width: 460px) {
+    width: 100%;
+  }
+`;
+
 export const Information = styled.div`
     width: 200px;
 `
-
 export const TextCalories = styled.span`
     color: #f1af09;
     font-weight: 700;

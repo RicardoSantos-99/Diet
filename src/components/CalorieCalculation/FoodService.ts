@@ -19,6 +19,26 @@ class FoodService {
     }
   }
 
+  async saveDiet(selectedFoods: Food[]): Promise<void> {
+    try {
+      const response = await fetch('http://localhost:4000/api/user_foods', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body:  JSON.stringify({foods: selectedFoods}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+    } catch (error) {
+      console.error('There was a problem with your fetch operation:', error);
+    }
+  }
+
+
   async createFood(food: Food): Promise<Food> {
     try {
       const response = await fetch('http://localhost:4000/api/foods', {
@@ -74,6 +94,8 @@ class FoodService {
     const inputValueLower = inputValue.trim().toLowerCase();
     return foods.filter(food => food.name.toLowerCase().includes(inputValueLower)).slice(0, 12);
   }
+
+
 }
 
 export default FoodService;
