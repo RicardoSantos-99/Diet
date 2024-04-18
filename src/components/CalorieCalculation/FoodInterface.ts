@@ -1,4 +1,3 @@
-
 export interface Food {
   id: string;
   name: string;
@@ -7,4 +6,3 @@ export interface Food {
   carbohydrates: number;
   fat: number;
 }
-
