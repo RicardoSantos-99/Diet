@@ -1,25 +1,61 @@
 import React, { useState } from 'react';
 import { Container, InputField, MainContainer, ContainerInput, InputName, ButtonContainer  } from './AddFood.styled';
 import { SaveButton } from '../CalorieCalculation/CalorieCalculation.styled';
+import FoodService from '../CalorieCalculation/FoodService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const FormAdd = () => {
   const [foodName, setFoodName] = useState<string>('');
   const [calories, setCalories] = useState<string>('');
   const [proteins, setProteins] = useState<string>('');
-  const [Carbohydrates, setCarbohydrates] = useState<string>('');
+  const [carbohydrates, setCarbohydrates] = useState<string>('');
   const [fats, setFats] = useState<string>('');
+  const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const validateInputs = () => {
+    return parseFloat(calories) > 0 && parseFloat(proteins) > 0 && parseFloat(carbohydrates) > 0 && parseFloat(fats) > 0;
+  };
+    const resetFields = () => {
+    setFoodName('');
+    setCalories('');
+    setProteins('');
+    setCarbohydrates('');
+    setFats('');
+  };
+
+   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
-    if (parseFloat(calories) < 1 || parseFloat(Carbohydrates) < 1 || parseFloat(proteins) < 1 || parseFloat(fats) < 1) {
-      alert("Os valores de calorias, proteínas e gorduras devem ter no mínimo 1 grama");
+    if (!validateInputs()) {
+      toast.error('Todos os campos devem ter valores maiores que zero.');
       return;
     }
 
-    console.log(`Nome do Alimento: ${foodName}, Calorias: ${calories}, Proteinas: ${proteins}, Carboidratos: ${Carbohydrates}, Gorduras: ${fats}`);
-  };
+    const foodData = {
+      name: foodName,
+      calories: parseFloat(calories),
+      protein: parseFloat(proteins),
+      carbohydrates: parseFloat(carbohydrates),
+      fat: parseFloat(fats),
+      id: Math.random().toString()
+    };
+
+    try {
+      const foodService = new FoodService();
+      const response = await foodService.createFood(foodData);
+
+      toast.success('Os dados foram salvos com sucesso!');
+      resetFields();
+    } catch (errors) {
+        if (errors.name[0] == "has already been taken") {
+            toast.error('Esse alimento já existe.');
+            return
+        }
+      toast.error('Houve um erro ao salvar os dados.');
+    }
+  }; 
 
   return (
     <Container>
@@ -50,7 +86,7 @@ const FormAdd = () => {
                 <InputName style={{color: '#27ac09'}}>Proteínas</InputName>
                 <InputField
                     type="number"
-                    placeholder="Proteinas"
+                    placeholder="Proteínas"
                     value={proteins}
                     onChange={(e) => setProteins(e.target.value)}
                     required
@@ -61,7 +97,7 @@ const FormAdd = () => {
                 <InputField
                     type="number"
                     placeholder="Calorias"
-                    value={Carbohydrates}
+                    value={carbohydrates}
                     onChange={(e) => setCarbohydrates(e.target.value)}
                     required
                 />
@@ -78,6 +114,7 @@ const FormAdd = () => {
             </ContainerInput>
             <ButtonContainer><SaveButton type="submit">Salvar</SaveButton></ButtonContainer>
         </form>
+        <ToastContainer />
         </MainContainer>
     </Container>
   );
