@@ -16,13 +16,13 @@ TextFood,
 } from './CalorieCalculation.styled';
 import FoodService from './FoodService';
 import { Food } from './FoodInterface';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CalorieCalculation = () => {
   const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState<Food[]>([]);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipMessage, setTooltipMessage] = useState('');
 
   const foodService = new FoodService();
 
@@ -65,18 +65,13 @@ const CalorieCalculation = () => {
     });
   }, []);
 
-  
   const saveDiet = useCallback(async () => {
     try {
       await foodService.saveDiet(selectedFoods);
-      console.log('Dieta salva com sucesso!')
-      setTooltipMessage('Dieta salva com sucesso!');
-      setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 3000); 
+      toast.success('Dieta salva com sucesso!');
+    
     } catch (error) {
-      setTooltipMessage('Erro ao salvar dieta. Tente novamente.');
-      setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 3000);
+      toast.error('Houve um erro ao salvar a dieta.');
     }
   }, [selectedFoods]);
 
@@ -141,23 +136,8 @@ const CalorieCalculation = () => {
         </Information>
         <SaveButton onClick={saveDiet}>
           Salvar Dieta
-           {showTooltip && (
-            <div style={{
-              display: 'block',
-              position: 'absolute',
-              top: '100px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              padding: '5px',
-              backgroundColor: 'black',
-              color: 'white',
-              borderRadius: '4px',
-              whiteSpace: 'nowrap',
-            }}>
-              {tooltipMessage}
-            </div>
-          )}
         </SaveButton>
+        <ToastContainer />
       </TableContainer>
     </MainContainer>
   );

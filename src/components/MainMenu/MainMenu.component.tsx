@@ -1,12 +1,12 @@
 import React from "react";
 import { MainContainer, Container, Logo, Menu, Login, Titles, ContainerLogin } from "./MainMenu.styled";
-import NutriiPlan from "../../assets/nutriiplan.png";
+import NutriPlan from "../../assets/nutriiplan.png";
 
 const MainMenu = () => {
   return (
     <MainContainer>
       <Container>
-        <Logo src={NutriiPlan} />
+        <Logo src={NutriPlan} />
         <Menu>
             <Titles>Home</Titles>
             <Titles>Alimentos</Titles>

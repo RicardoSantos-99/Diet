@@ -38,7 +38,6 @@ class FoodService {
     }
   }
 
-
   async createFood(food: Food): Promise<Food> {
     try {
       const response = await fetch('http://localhost:4000/api/foods', {
@@ -50,6 +49,12 @@ class FoodService {
       });
 
       if (!response.ok) {
+      const errorResponse = await response.json();
+      const errors = errorResponse.errors;
+      return Promise.reject(errors);
+    }
+
+      if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
@@ -57,7 +62,6 @@ class FoodService {
       return data;
 
     } catch (error) {
-      console.error('There was a problem with your fetch operation:', error);
       return food;
     }
   }
