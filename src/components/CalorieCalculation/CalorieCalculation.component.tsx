@@ -1,4 +1,18 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import {
+	Box,
+	Button,
+	Flex,
+	Table,
+	Tbody,
+	Td,
+	Text,
+	Th,
+	Thead,
+	Tr,
+	VStack,
+} from '@chakra-ui/react';
+
 import Autosuggest from 'react-autosuggest';
 import {
 	MainContainer,
@@ -125,63 +139,83 @@ const CalorieCalculation = () => {
 
 			<ListContainer>
 				<h3>Alimentos Selecionados:</h3>
-				<div>
-					{selectedFoods.map((food, _index) => (
-						<ListFoods
-							key={food.id}
-							onClick={() => removeSelectedFood(food.id)}
-						>
-							<TextFood>{food.name}</TextFood> -{' '}
-							<TextCalories>
-								{food.calories.toFixed(2).replace('.', ',')}{' '}
-								kcal
-							</TextCalories>{' '}
-							-{' '}
-							<TextProtein>
-								{food.protein.toFixed(2).replace('.', ',')} g
-							</TextProtein>{' '}
-							-{' '}
-							<TextCarbohydrates>
-								{food.carbohydrates
-									.toFixed(2)
-									.replace('.', ',')}{' '}
-								g
-							</TextCarbohydrates>{' '}
-							-{' '}
-							<TextFat>
-								{food.fat.toFixed(2).replace('.', ',')} g
-							</TextFat>
-						</ListFoods>
-					))}
-				</div>
+
+				<Box overflowY="auto" padding="4" maxWidth="100%">
+					<VStack spacing={2} align="stretch">
+						{selectedFoods.map((food) => (
+							<Box
+								key={food.id}
+								onClick={() => removeSelectedFood(food.id)}
+								padding="4"
+								boxShadow="md"
+								_hover={{ bg: 'gray.300' }}
+								cursor="pointer"
+								w="full"
+							>
+								<Flex justifyContent="space-between" gap="2">
+									<Text fontWeight="bold">{food.name}</Text>
+									<Text as="span" color="teal.600">
+										{food.calories
+											.toFixed(2)
+											.replace('.', ',')}{' '}
+										kcal
+									</Text>
+									<Text as="span" color="orange.500">
+										{food.protein
+											.toFixed(2)
+											.replace('.', ',')}{' '}
+										g
+									</Text>
+									<Text as="span" color="green.500">
+										{food.carbohydrates
+											.toFixed(2)
+											.replace('.', ',')}{' '}
+										g
+									</Text>
+									<Text as="span" color="red.500">
+										{food.fat.toFixed(2).replace('.', ',')}{' '}
+										g
+									</Text>
+								</Flex>
+							</Box>
+						))}
+					</VStack>
+				</Box>
 			</ListContainer>
 
-			<TableContainer>
+			<Box p="4">
 				<h3>Valor Nutricional:</h3>
-				<Information>
-					<Nutricional>
-						Calorias:{' '}
-						<TextCalories>
-							{totalNutrition.calories} kcal
-						</TextCalories>
-					</Nutricional>
-					<Nutricional>
-						Proteína:{' '}
-						<TextProtein>{totalNutrition.protein} g</TextProtein>
-					</Nutricional>
-					<Nutricional>
-						Carboidratos:{' '}
-						<TextCarbohydrates>
-							{totalNutrition.carbohydrates} g
-						</TextCarbohydrates>
-					</Nutricional>
-					<Nutricional>
-						Gordura: <TextFat>{totalNutrition.fat} g</TextFat>
-					</Nutricional>
-				</Information>
-				<SaveButton onClick={saveDiet}>Salvar Dieta</SaveButton>
+				<Table variant="simple">
+					<Thead>
+						<Tr>
+							<Th>Nutriente</Th>
+							<Th>Quantidade</Th>
+						</Tr>
+					</Thead>
+					<Tbody>
+						<Tr>
+							<Td>Calorias</Td>
+							<Td>{totalNutrition.calories} kcal</Td>
+						</Tr>
+						<Tr>
+							<Td>Proteína</Td>
+							<Td>{totalNutrition.protein} g</Td>
+						</Tr>
+						<Tr>
+							<Td>Carboidratos</Td>
+							<Td>{totalNutrition.carbohydrates} g</Td>
+						</Tr>
+						<Tr>
+							<Td>Gordura</Td>
+							<Td>{totalNutrition.fat} g</Td>
+						</Tr>
+					</Tbody>
+				</Table>
+				<Button colorScheme="blue" onClick={saveDiet}>
+					Salvar Dieta
+				</Button>
 				<ToastContainer />
-			</TableContainer>
+			</Box>
 		</MainContainer>
 	);
 };
