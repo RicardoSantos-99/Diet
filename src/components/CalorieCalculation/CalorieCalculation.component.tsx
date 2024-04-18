@@ -2,7 +2,9 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import {
 	Box,
 	Button,
+	Center,
 	Flex,
+	Heading,
 	Table,
 	Tbody,
 	Td,
@@ -18,20 +20,10 @@ import {
 	MainContainer,
 	InputContainer,
 	ListContainer,
-	TableContainer,
-	Nutricional,
-	SaveButton,
-	Information,
-	TextCalories,
-	TextCarbohydrates,
-	TextProtein,
-	TextFat,
-	ListFoods,
-	TextFood,
 } from './CalorieCalculation.styled';
 import FoodService from './FoodService';
 import { Food } from './FoodInterface';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CalorieCalculation = () => {
@@ -113,7 +105,9 @@ const CalorieCalculation = () => {
 	return (
 		<MainContainer>
 			<InputContainer>
-				<h3>Selecione algum alimento</h3>
+				<Heading as="h3" size="md">
+					Selecione algum alimento
+				</Heading>
 				<Autosuggest
 					suggestions={getSuggestions(inputValue)}
 					onSuggestionsFetchRequested={() => {}}
@@ -138,8 +132,9 @@ const CalorieCalculation = () => {
 			</InputContainer>
 
 			<ListContainer>
-				<h3>Alimentos Selecionados:</h3>
-
+				<Heading as="h3" size="md">
+					Alimentos Selecionados:
+				</Heading>
 				<Box overflowY="auto" padding="4" maxWidth="100%">
 					<VStack spacing={2} align="stretch">
 						{selectedFoods.map((food) => (
@@ -184,37 +179,45 @@ const CalorieCalculation = () => {
 			</ListContainer>
 
 			<Box p="4">
-				<h3>Valor Nutricional:</h3>
-				<Table variant="simple">
-					<Thead>
-						<Tr>
-							<Th>Nutriente</Th>
-							<Th>Quantidade</Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						<Tr>
-							<Td>Calorias</Td>
-							<Td>{totalNutrition.calories} kcal</Td>
-						</Tr>
-						<Tr>
-							<Td>Proteína</Td>
-							<Td>{totalNutrition.protein} g</Td>
-						</Tr>
-						<Tr>
-							<Td>Carboidratos</Td>
-							<Td>{totalNutrition.carbohydrates} g</Td>
-						</Tr>
-						<Tr>
-							<Td>Gordura</Td>
-							<Td>{totalNutrition.fat} g</Td>
-						</Tr>
-					</Tbody>
-				</Table>
-				<Button colorScheme="blue" onClick={saveDiet}>
-					Salvar Dieta
-				</Button>
-				<ToastContainer />
+				<Center
+					flexDirection="column"
+					bg="gray.100"
+					p={4}
+					borderRadius="lg"
+				>
+					<Heading as="h3" size="sm">
+						Valor Nutricional:
+					</Heading>
+					<Table variant="simple" colorScheme="teal">
+						<Thead>
+							<Tr>
+								<Th>Nutriente</Th>
+								<Th>Quantidade</Th>
+							</Tr>
+						</Thead>
+						<Tbody>
+							<Tr>
+								<Td>Calorias</Td>
+								<Td>{totalNutrition.calories} kcal</Td>
+							</Tr>
+							<Tr>
+								<Td>Proteína</Td>
+								<Td>{totalNutrition.protein} g</Td>
+							</Tr>
+							<Tr>
+								<Td>Carboidratos</Td>
+								<Td>{totalNutrition.carbohydrates} g</Td>
+							</Tr>
+							<Tr>
+								<Td>Gordura</Td>
+								<Td>{totalNutrition.fat} g</Td>
+							</Tr>
+						</Tbody>
+					</Table>
+					<Button colorScheme="blue" mt="4" onClick={saveDiet}>
+						Salvar Dieta
+					</Button>
+				</Center>
 			</Box>
 		</MainContainer>
 	);
