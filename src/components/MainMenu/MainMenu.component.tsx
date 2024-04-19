@@ -9,7 +9,7 @@ import {
 	Titles,
 	ContainerLogin,
 } from './MainMenu.styled';
-import NutriPlan from '../../assets/nutriiplan.png';
+import NutriPlan from '../../assets/nutriplan.png';
 
 const MainMenu = () => {
 	return (

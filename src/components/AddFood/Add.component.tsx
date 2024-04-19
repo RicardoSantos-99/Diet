@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import FoodService from '../CalorieCalculation/FoodService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {

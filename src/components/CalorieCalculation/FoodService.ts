@@ -129,10 +129,10 @@ class FoodService {
 		);
 
 		return {
-			calories: total.calories.toFixed(2).replace('.', ','),
-			protein: total.protein.toFixed(2).replace('.', ','),
-			carbohydrates: total.carbohydrates.toFixed(2).replace('.', ','),
-			fat: total.fat.toFixed(2).replace('.', ','),
+			calories: this.formatValue(total.calories),
+			protein: this.formatValue(total.protein),
+			carbohydrates: this.formatValue(total.carbohydrates),
+			fat: this.formatValue(total.fat),
 		};
 	};
 
@@ -141,6 +141,10 @@ class FoodService {
 		return foods
 			.filter((food) => food.name.toLowerCase().includes(inputValueLower))
 			.slice(0, 12);
+	};
+
+	formatValue = (value: number) => {
+		return value.toFixed(2).replace('.', ',');
 	};
 }
 
