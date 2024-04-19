@@ -12,8 +12,10 @@ import {
 	Heading,
 	Input,
 } from '@chakra-ui/react';
+import { useFood } from '../MainMenu/foodContext';
 
 const FormAdd = () => {
+	const { addFood } = useFood();
 	const [foodName, setFoodName] = useState<string>('');
 	const [calories, setCalories] = useState<string>('');
 	const [proteins, setProteins] = useState<string>('');
@@ -36,7 +38,7 @@ const FormAdd = () => {
 		setFats('');
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 
 		if (!validateInputs()) {
@@ -54,9 +56,7 @@ const FormAdd = () => {
 		};
 
 		try {
-			const foodService = new FoodService();
-			await foodService.createFood(foodData);
-
+			addFood(foodData);
 			toast.success('Alimento salvo com sucesso!', {
 				position: 'top-right',
 				autoClose: 5000,

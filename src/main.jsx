@@ -5,12 +5,15 @@ import CalorieCalculation from './components/CalorieCalculation/CalorieCalculati
 import { ChakraProvider } from '@chakra-ui/react';
 import './index.css';
 import { ToastContainer } from 'react-toastify';
+import { FoodProvider } from './components/MainMenu/foodContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ChakraProvider>
 		<MainMenu />
-		<FormAdd />
+		<FoodProvider>
+			<FormAdd />
+			<CalorieCalculation />
+		</FoodProvider>
 		<ToastContainer />
-		<CalorieCalculation />
 	</ChakraProvider>,
 );

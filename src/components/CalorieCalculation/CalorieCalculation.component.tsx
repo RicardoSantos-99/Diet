@@ -21,6 +21,7 @@ import FoodService from './FoodService';
 import { Food } from './FoodInterface';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useFood } from '../MainMenu/foodContext';
 
 interface ExtendedFood extends Food {
 	label: string;
