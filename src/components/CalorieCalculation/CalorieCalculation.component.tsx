@@ -17,11 +17,11 @@ import {
 	Tr,
 } from '@chakra-ui/react';
 
-import FoodService from './FoodService';
 import { Food } from './FoodInterface';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useFood } from '../MainMenu/foodContext';
+import FoodService from './FoodService';
 
 interface ExtendedFood extends Food {
 	label: string;
@@ -29,20 +29,9 @@ interface ExtendedFood extends Food {
 }
 
 const CalorieCalculation = () => {
+	const { foods } = useFood();
 	const [selectedFoods, setSelectedFoods] = useState<ExtendedFood[]>([]);
-	const [suggestions, setSuggestions] = useState<Food[]>([]);
-
 	const foodService = new FoodService();
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const apiSuggestions = await foodService.getFoodFromApi();
-
-			setSuggestions(apiSuggestions);
-		};
-
-		fetchData();
-	}, []);
 
 	const handleSelectChange = useCallback((selectedItems: any) => {
 		setSelectedFoods(selectedItems);
@@ -70,7 +59,7 @@ const CalorieCalculation = () => {
 		return foodService.calculateTotalNutrition(selectedFoods);
 	}, [selectedFoods]);
 
-	const options = suggestions.map((item) => ({
+	const options = foods.map((item) => ({
 		value: item.id,
 		label: item.name,
 		calories: item.calories,
