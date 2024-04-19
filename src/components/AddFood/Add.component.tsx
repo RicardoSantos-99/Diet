@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Container, MainContainer } from './AddFood.styled';
 import FoodService from '../CalorieCalculation/FoodService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
 	Box,
 	Button,
+	Container,
 	Flex,
 	FormControl,
 	FormLabel,
@@ -80,98 +80,94 @@ const FormAdd = () => {
 	};
 
 	return (
-		<Container>
-			<MainContainer>
-				<Heading as="h3" size="md">
-					Adicione novos alimentos:
-				</Heading>
+		<Container maxW="container.xl" padding="8" height="100%" bg="white">
+			<Heading as="h3" size="md">
+				Adicione novos alimentos:
+			</Heading>
 
-				<Box
-					as="form"
-					onSubmit={handleSubmit}
-					display="flex"
-					flexDirection="column"
-					p={5}
+			<Box
+				as="form"
+				onSubmit={handleSubmit}
+				display="flex"
+				flexDirection="column"
+				p={5}
+			>
+				<Flex
+					alignItems="flex-end"
+					justifyContent="space-between"
+					gap="4"
 				>
-					<Flex
-						alignItems="flex-end"
-						justifyContent="space-between"
-						gap="4"
+					<FormControl isRequired flex="1">
+						<FormLabel htmlFor="foodName" color="#000">
+							Nome do alimento
+						</FormLabel>
+						<Input
+							id="foodName"
+							type="text"
+							placeholder="Nome do Alimento"
+							value={foodName}
+							onChange={(e) => setFoodName(e.target.value)}
+						/>
+					</FormControl>
+					<FormControl isRequired flex="1">
+						<FormLabel htmlFor="calories" color="#f1af09">
+							Calorias
+						</FormLabel>
+						<Input
+							id="calories"
+							type="number"
+							placeholder="Calorias"
+							value={calories}
+							onChange={(e) => setCalories(e.target.value)}
+						/>
+					</FormControl>
+					<FormControl isRequired flex="1">
+						<FormLabel htmlFor="proteins" color="#27ac09">
+							Proteínas
+						</FormLabel>
+						<Input
+							id="proteins"
+							type="number"
+							placeholder="Proteínas"
+							value={proteins}
+							onChange={(e) => setProteins(e.target.value)}
+						/>
+					</FormControl>
+					<FormControl isRequired flex="1">
+						<FormLabel htmlFor="carbohydrates" color="#f46708">
+							Carboidratos
+						</FormLabel>
+						<Input
+							id="carbohydrates"
+							type="number"
+							placeholder="Carboidratos"
+							value={carbohydrates}
+							onChange={(e) => setCarbohydrates(e.target.value)}
+						/>
+					</FormControl>
+					<FormControl isRequired flex="1">
+						<FormLabel htmlFor="fats" color="#b361e8">
+							Gorduras
+						</FormLabel>
+						<Input
+							id="fats"
+							type="number"
+							placeholder="Gorduras"
+							value={fats}
+							onChange={(e) => setFats(e.target.value)}
+						/>
+					</FormControl>
+					<Button
+						colorScheme="blue"
+						type="submit"
+						size="lg"
+						alignSelf="flex-end"
+						onClick={handleSubmit}
 					>
-						<FormControl isRequired flex="1">
-							<FormLabel htmlFor="foodName" color="#000">
-								Nome do alimento
-							</FormLabel>
-							<Input
-								id="foodName"
-								type="text"
-								placeholder="Nome do Alimento"
-								value={foodName}
-								onChange={(e) => setFoodName(e.target.value)}
-							/>
-						</FormControl>
-						<FormControl isRequired flex="1">
-							<FormLabel htmlFor="calories" color="#f1af09">
-								Calorias
-							</FormLabel>
-							<Input
-								id="calories"
-								type="number"
-								placeholder="Calorias"
-								value={calories}
-								onChange={(e) => setCalories(e.target.value)}
-							/>
-						</FormControl>
-						<FormControl isRequired flex="1">
-							<FormLabel htmlFor="proteins" color="#27ac09">
-								Proteínas
-							</FormLabel>
-							<Input
-								id="proteins"
-								type="number"
-								placeholder="Proteínas"
-								value={proteins}
-								onChange={(e) => setProteins(e.target.value)}
-							/>
-						</FormControl>
-						<FormControl isRequired flex="1">
-							<FormLabel htmlFor="carbohydrates" color="#f46708">
-								Carboidratos
-							</FormLabel>
-							<Input
-								id="carbohydrates"
-								type="number"
-								placeholder="Carboidratos"
-								value={carbohydrates}
-								onChange={(e) =>
-									setCarbohydrates(e.target.value)
-								}
-							/>
-						</FormControl>
-						<FormControl isRequired flex="1">
-							<FormLabel htmlFor="fats" color="#b361e8">
-								Gorduras
-							</FormLabel>
-							<Input
-								id="fats"
-								type="number"
-								placeholder="Gorduras"
-								value={fats}
-								onChange={(e) => setFats(e.target.value)}
-							/>
-						</FormControl>
-						<Button
-							colorScheme="blue"
-							type="submit"
-							size="lg"
-							alignSelf="flex-end"
-							onClick={handleSubmit}
-						>
-							Salvar
-						</Button>
-					</Flex>
-				</Box>
-			</MainContainer>
+						Salvar
+					</Button>
+				</Flex>
+			</Box>
 		</Container>
 	);
 };

@@ -17,7 +17,6 @@ import {
 	Tr,
 } from '@chakra-ui/react';
 
-import { MainContainer, InputContainer } from './CalorieCalculation.styled';
 import FoodService from './FoodService';
 import { Food } from './FoodInterface';
 import { toast } from 'react-toastify';
