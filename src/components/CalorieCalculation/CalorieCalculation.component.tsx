@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import Select from 'react-select';
 import {
 	Box,
 	Button,
@@ -28,7 +29,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const CalorieCalculation = () => {
 	const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
-	const [inputValue, setInputValue] = useState('');
 	const [suggestions, setSuggestions] = useState<Food[]>([]);
 
 	const foodService = new FoodService();
@@ -36,56 +36,15 @@ const CalorieCalculation = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const apiSuggestions = await foodService.getFoodFromApi();
+
 			setSuggestions(apiSuggestions);
 		};
 
 		fetchData();
 	}, []);
 
-	const getSuggestions = useCallback(
-		(inputValue: string): Food[] => {
-			return foodService.getFilteredFoods(suggestions, inputValue);
-		},
-		[suggestions],
-	);
-
-	const onChange = useCallback(
-		(
-			_event: React.FormEvent<HTMLElement>,
-			{ newValue }: { newValue: string },
-		) => {
-			setInputValue(newValue);
-		},
-		[],
-	);
-
-	const onSuggestionSelected = useCallback(
-		(_event: any, { suggestion }: { suggestion: Food }) => {
-			setSelectedFoods((current) =>
-				current.length < 17 ? [...current, suggestion] : current,
-			);
-			setInputValue('');
-		},
-		[],
-	);
-
-	const renderSuggestion = useCallback(
-		(suggestion: Food) => (
-			<div style={{ color: 'red' }}>{suggestion.name}</div>
-		),
-		[],
-	);
-
-	const removeSelectedFood = useCallback((index: string) => {
-		setSelectedFoods((current) => {
-			const newSelectedFoods = [...current];
-			const indexToRemove = newSelectedFoods.findIndex(
-				(food) => food.id === index,
-			);
-			newSelectedFoods.splice(indexToRemove, 1);
-
-			return newSelectedFoods;
-		});
+	const handleSelectChange = useCallback((selectedItems: any) => {
+		setSelectedFoods(selectedItems);
 	}, []);
 
 	const saveDiet = useCallback(async () => {
@@ -97,38 +56,50 @@ const CalorieCalculation = () => {
 		}
 	}, [selectedFoods]);
 
-	const totalNutrition = useMemo(
-		() => foodService.calculateTotalNutrition(selectedFoods),
-		[selectedFoods],
-	);
+	const totalNutrition = useMemo(() => {
+		if (selectedFoods.length === 0) {
+			return {
+				calories: 0,
+				protein: 0,
+				carbohydrates: 0,
+				fat: 0,
+			};
+		}
+
+		return foodService.calculateTotalNutrition(selectedFoods);
+	}, [selectedFoods]);
+
+	const options = suggestions.map((item) => ({
+		value: item.id,
+		label: item.name,
+		calories: item.calories,
+		protein: item.protein,
+		carbohydrates: item.carbohydrates,
+		fat: item.fat,
+	}));
 
 	return (
 		<MainContainer>
 			<InputContainer>
-				<Heading as="h3" size="md">
+				<Heading as="h3" size="md" padding={3}>
 					Selecione algum alimento
 				</Heading>
-				<Autosuggest
-					suggestions={getSuggestions(inputValue)}
-					onSuggestionsFetchRequested={() => {}}
-					onSuggestionsClearRequested={() => {}}
-					getSuggestionValue={(suggestion) => suggestion.name}
-					onSuggestionSelected={onSuggestionSelected}
-					renderSuggestion={renderSuggestion}
-					inputProps={{
-						placeholder: 'Digite um alimento',
-						value: inputValue,
-						onChange: onChange,
-						style: {
-							background: 'lightblue',
-							border: '1px solid #000',
-							borderRadius: '4px',
-							outline: 'none',
-							color: '#000',
-							listStyleType: 'none',
-						},
-					}}
-				/>
+				<Box
+					padding="6"
+					boxShadow="lg"
+					_hover={{ bg: 'gray.100' }}
+					cursor="pointer"
+					w="full"
+				>
+					<Select
+						isMulti
+						onChange={handleSelectChange}
+						options={options}
+						name="colors"
+						className="basic-multi-select"
+						classNamePrefix="select"
+					/>
+				</Box>
 			</InputContainer>
 
 			<ListContainer>
@@ -140,7 +111,6 @@ const CalorieCalculation = () => {
 						{selectedFoods.map((food) => (
 							<Box
 								key={food.id}
-								onClick={() => removeSelectedFood(food.id)}
 								padding="4"
 								boxShadow="md"
 								_hover={{ bg: 'gray.300' }}
