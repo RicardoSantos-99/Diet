@@ -6,14 +6,30 @@ import { ChakraProvider } from '@chakra-ui/react';
 import './index.css';
 import { ToastContainer } from 'react-toastify';
 import { FoodProvider } from './components/MainMenu/foodContext';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<ChakraProvider>
-		<MainMenu />
-		<FoodProvider>
-			<FormAdd />
-			<CalorieCalculation />
-		</FoodProvider>
-		<ToastContainer />
-	</ChakraProvider>,
+	<Router>
+		<ChakraProvider>
+			<FoodProvider>
+				<Routes>
+					<Route path="/" element={<MainMenu />} />
+					<Route path="/login" />
+				</Routes>
+				<FormAdd />
+				<CalorieCalculation />
+			</FoodProvider>
+			<ToastContainer
+				position="top-right"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
+		</ChakraProvider>
+	</Router>,
 );

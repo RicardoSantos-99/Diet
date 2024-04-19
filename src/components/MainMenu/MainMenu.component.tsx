@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
 	MainContainer,
 	Container,
@@ -10,6 +9,7 @@ import {
 	ContainerLogin,
 } from './MainMenu.styled';
 import NutriPlan from '../../assets/nutriplan.png';
+import { Link } from 'react-router-dom';
 
 const MainMenu = () => {
 	return (
@@ -17,12 +17,20 @@ const MainMenu = () => {
 			<Container>
 				<Logo src={NutriPlan} />
 				<Menu>
-					<Titles>Home</Titles>
-					<Titles>Alimentos</Titles>
-					<Titles>Planejamento</Titles>
+					<Titles>
+						<Link to="/">Home</Link>
+					</Titles>
+					<Titles>
+						<Link to="/alimentos">Alimentos</Link>
+					</Titles>
+					<Titles>
+						<Link to="/receitas">Receitas</Link>
+					</Titles>
 					<Titles>Receitas</Titles>
 					<ContainerLogin>
-						<Login>Login</Login>
+						<Login>
+							<Link to="/login">Login</Link>
+						</Login>
 					</ContainerLogin>
 				</Menu>
 			</Container>
