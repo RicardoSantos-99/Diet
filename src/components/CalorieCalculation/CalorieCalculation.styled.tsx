@@ -22,7 +22,7 @@ export const InputContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	height: 480px;
-	width: 300px;
+	width: 500px;
 	border-radius: 12px;
 
 	@media (max-width: 1550px) {

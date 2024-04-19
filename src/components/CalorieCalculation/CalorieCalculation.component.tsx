@@ -5,6 +5,7 @@ import {
 	Button,
 	Center,
 	Flex,
+	Grid,
 	Heading,
 	Table,
 	Tbody,
@@ -13,22 +14,21 @@ import {
 	Th,
 	Thead,
 	Tr,
-	VStack,
 } from '@chakra-ui/react';
 
-import Autosuggest from 'react-autosuggest';
-import {
-	MainContainer,
-	InputContainer,
-	ListContainer,
-} from './CalorieCalculation.styled';
+import { MainContainer, InputContainer } from './CalorieCalculation.styled';
 import FoodService from './FoodService';
 import { Food } from './FoodInterface';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+interface ExtendedFood extends Food {
+	label: string;
+	value: string;
+}
+
 const CalorieCalculation = () => {
-	const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
+	const [selectedFoods, setSelectedFoods] = useState<ExtendedFood[]>([]);
 	const [suggestions, setSuggestions] = useState<Food[]>([]);
 
 	const foodService = new FoodService();
@@ -100,14 +100,9 @@ const CalorieCalculation = () => {
 						classNamePrefix="select"
 					/>
 				</Box>
-			</InputContainer>
 
-			<ListContainer>
-				<Heading as="h3" size="md">
-					Alimentos Selecionados:
-				</Heading>
-				<Box overflowY="auto" padding="4" maxWidth="100%">
-					<VStack spacing={2} align="stretch">
+				<Box overflowY="auto" padding="2" maxWidth="100%">
+					<Grid templateColumns="repeat(3, 1fr)" gap={6}>
 						{selectedFoods.map((food) => (
 							<Box
 								key={food.id}
@@ -115,39 +110,62 @@ const CalorieCalculation = () => {
 								boxShadow="md"
 								_hover={{ bg: 'gray.300' }}
 								cursor="pointer"
-								w="full"
 							>
-								<Flex justifyContent="space-between" gap="2">
-									<Text fontWeight="bold">{food.name}</Text>
-									<Text as="span" color="teal.600">
-										{food.calories
-											.toFixed(2)
-											.replace('.', ',')}{' '}
-										kcal
+								<Flex flexDirection="column">
+									<Text fontWeight="bold" textAlign="center">
+										{food.label}
 									</Text>
-									<Text as="span" color="orange.500">
-										{food.protein
-											.toFixed(2)
-											.replace('.', ',')}{' '}
-										g
-									</Text>
-									<Text as="span" color="green.500">
-										{food.carbohydrates
-											.toFixed(2)
-											.replace('.', ',')}{' '}
-										g
-									</Text>
-									<Text as="span" color="red.500">
-										{food.fat.toFixed(2).replace('.', ',')}{' '}
-										g
-									</Text>
+									<Flex
+										justifyContent="space-between"
+										gap={3}
+									>
+										<Text
+											as="span"
+											color="teal.600"
+											fontSize="xs"
+										>
+											{food.calories
+												.toFixed(2)
+												.replace('.', ',')}
+											kcal
+										</Text>
+										<Text
+											as="span"
+											color="orange.500"
+											fontSize="xs"
+										>
+											{food.protein
+												.toFixed(2)
+												.replace('.', ',')}
+											g
+										</Text>
+										<Text
+											as="span"
+											color="green.500"
+											fontSize="xs"
+										>
+											{food.carbohydrates
+												.toFixed(2)
+												.replace('.', ',')}
+											g
+										</Text>
+										<Text
+											as="span"
+											color="red.500"
+											fontSize="xs"
+										>
+											{food.fat
+												.toFixed(2)
+												.replace('.', ',')}
+											g
+										</Text>
+									</Flex>
 								</Flex>
 							</Box>
 						))}
-					</VStack>
+					</Grid>
 				</Box>
-			</ListContainer>
-
+			</InputContainer>
 			<Box p="4">
 				<Center
 					flexDirection="column"
