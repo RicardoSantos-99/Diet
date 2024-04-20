@@ -11,10 +11,6 @@ class FoodService {
 			const { data } = await response.json();
 			return Array.isArray(data) ? data : this.getFoodFromMock();
 		} catch (error) {
-			console.error(
-				'There was a problem with your fetch operation:',
-				error,
-			);
 			return this.getFoodFromMock();
 		}
 	}
@@ -35,12 +31,7 @@ class FoodService {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-		} catch (error) {
-			console.error(
-				'There was a problem with your fetch operation:',
-				error,
-			);
-		}
+		} catch (error) {}
 	}
 
 	async createFood(food: Food): Promise<Food> {

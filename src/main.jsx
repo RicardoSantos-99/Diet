@@ -1,35 +1,20 @@
 import ReactDOM from 'react-dom/client';
-import MainMenu from './components/MainMenu/MainMenu.component';
-import FormAdd from './components/AddFood/Add.component';
-import CalorieCalculation from './components/CalorieCalculation/CalorieCalculation.component';
 import { ChakraProvider } from '@chakra-ui/react';
 import './index.css';
-import { ToastContainer } from 'react-toastify';
-import { FoodProvider } from './components/MainMenu/foodContext';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
 	<Router>
 		<ChakraProvider>
-			<FoodProvider>
-				<Routes>
-					<Route path="/" element={<MainMenu />} />
-					<Route path="/login" />
-				</Routes>
-				<FormAdd />
-				<CalorieCalculation />
-			</FoodProvider>
-			<ToastContainer
-				position="top-right"
-				autoClose={5000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				closeOnClick
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-			/>
+			<Routes>
+				<Route path="/login" element={<Login />} />
+				<Route path="/home" element={<Home />} />
+				<Route path="register" element={<Register />} />
+			</Routes>
 		</ChakraProvider>
 	</Router>,
 );
