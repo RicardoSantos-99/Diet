@@ -1,9 +1,19 @@
 import React from 'react';
-import { Flex, Image, Link, Spacer } from '@chakra-ui/react';
+import { Button, Flex, Image, Link, Spacer } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import NutriPlan from '../../assets/nutriplan.png';
 
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase-config';
+
 const MainMenu = () => {
+	const navigate = useNavigate();
+	const handleLogout = async () => {
+		signOut(auth);
+
+		navigate('/sign-in');
+	};
 	return (
 		<Flex as="nav" align="center" justify="center" p={4} bg="gray.100">
 			<Image src={NutriPlan} alt="NutriPlan Logo" h="50px" ml={4} />
@@ -18,17 +28,17 @@ const MainMenu = () => {
 				<Link as={RouterLink} to="/receitas" fontWeight="bold" mx={2}>
 					Receitas
 				</Link>
-				<Link
-					as={RouterLink}
-					to="/login"
+
+				<Button
 					p={2}
 					border="1px"
 					borderColor="gray.200"
 					borderRadius="md"
 					mx={2}
+					onClick={handleLogout}
 				>
-					Login
-				</Link>
+					Sair
+				</Button>
 			</Flex>
 		</Flex>
 	);

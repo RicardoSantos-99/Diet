@@ -14,38 +14,44 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { OAuthButtonGroup } from '../components/OAuthButtonGroup';
-import { PasswordField } from '../components/PasswordField';
-import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import AccountService from '../services/accountService';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Login = () => {
+import { useNavigate } from 'react-router-dom';
+
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase-config';
+
+const errorMessages = {
+	'auth/invalid-credential': 'Senha/Email incorreto.',
+	default: 'Ocorreu um erro ao tentar fazer login.',
+};
+
+const SignIn = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [error, setError] = useState('');
 	const navigate = useNavigate();
-
-	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setEmail(e.target.value);
-
-	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-		setPassword(e.target.value);
 
 	const handleSubmit = async () => {
 		if (email === '' || password === '') {
+			toast.error('Preencha todos os campos.');
 			return;
 		}
 
 		try {
-			const accountService = new AccountService();
-			await accountService.login(email, password);
-			navigate('/home');
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password,
+			);
+
+			navigate('/');
 		} catch (err) {
-			if (err.response && err.response.status === 401) {
-				setError('Usuário ou senha estão incorretos');
-			} else {
-				setError('Ocorreu um erro ao tentar fazer login');
-			}
+			const errorMessage =
+				errorMessages[err.code] || errorMessages['default'];
+
+			toast.error(errorMessage);
 		}
 	};
 
@@ -60,10 +66,11 @@ const Login = () => {
 				<Stack spacing="6">
 					<Stack spacing={{ base: '2', md: '3' }} textAlign="center">
 						<Heading size={{ base: 'xs', md: 'sm' }}>
-							Log in to your account
+							Entre na sua conta
 						</Heading>
 						<Text color="fg.muted">
-							Don't have an account? <Link href="#">Sign up</Link>
+							Não tem uma conta?{' '}
+							<Link href="/register">Cadastre-se</Link>
 						</Text>
 					</Stack>
 				</Stack>
@@ -78,18 +85,31 @@ const Login = () => {
 						<Stack spacing="5">
 							<FormControl>
 								<FormLabel htmlFor="email">Email</FormLabel>
-								<Input id="email" type="email" />
+								<Input
+									id="email"
+									type="email"
+									onChange={(e) => setEmail(e.target.value)}
+								/>
 							</FormControl>
-							<PasswordField />
+							<FormControl>
+								<FormLabel htmlFor="password">Senha</FormLabel>
+								<Input
+									id="password"
+									type="password"
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
+								/>
+							</FormControl>
 						</Stack>
 						<HStack justify="space-between">
-							<Checkbox defaultChecked>Remember me</Checkbox>
+							<Checkbox defaultChecked>Lembrar-me</Checkbox>
 							<Button variant="text" size="sm">
-								Forgot password?
+								Esqueceu a senha?
 							</Button>
 						</HStack>
 						<Stack spacing="6">
-							<Button>Sign in</Button>
+							<Button onClick={handleSubmit}>Entrar</Button>
 							<HStack>
 								<Divider />
 								<Text
@@ -97,7 +117,7 @@ const Login = () => {
 									whiteSpace="nowrap"
 									color="fg.muted"
 								>
-									or continue with
+									ou continue com
 								</Text>
 								<Divider />
 							</HStack>
@@ -110,4 +130,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default SignIn;
