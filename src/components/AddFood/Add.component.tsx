@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -12,6 +12,8 @@ import {
 	Input,
 } from '@chakra-ui/react';
 import { useFood } from '../MainMenu/foodContext';
+import { auth } from '../../firebase-config';
+import { User } from 'firebase/auth';
 
 const FormAdd = () => {
 	const { addFood } = useFood();
@@ -44,6 +46,9 @@ const FormAdd = () => {
 			toast.error('Todos os campos devem ter valores maiores que zero.');
 			return;
 		}
+
+		const user: User = auth.currentUser;
+		console.log(user);
 
 		const foodData = {
 			name: foodName,

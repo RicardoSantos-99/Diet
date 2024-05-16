@@ -14,7 +14,7 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { OAuthButtonGroup } from '../components/OAuthButtonGroup';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

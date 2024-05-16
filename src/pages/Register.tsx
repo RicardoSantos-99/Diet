@@ -13,7 +13,7 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
