@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
+import MainMenu from './components/MainMenu/MainMenu.component';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,6 +21,15 @@ root.render(
 					element={
 						<ProtectedRoute>
 							<Home />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/recommendation"
+					element={
+						<ProtectedRoute>
+							<MainMenu />
 						</ProtectedRoute>
 					}
 				/>

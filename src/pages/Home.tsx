@@ -3,6 +3,7 @@ import CalorieCalculation from '../components/CalorieCalculation/CalorieCalculat
 import { FoodProvider } from '../components/MainMenu/foodContext';
 
 import MainMenu from '../components/MainMenu/MainMenu.component';
+import Recommendation from './Recommendation';
 import { Box } from '@chakra-ui/react';
 
 const Home = () => {
@@ -11,6 +12,7 @@ const Home = () => {
 			<FoodProvider>
 				<MainMenu />
 				<FormAdd />
+				<Recommendation />
 				<CalorieCalculation />
 			</FoodProvider>
 		</Box>

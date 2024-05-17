@@ -1,4 +1,4 @@
-import React, {
+import {
 	createContext,
 	useContext,
 	useState,
@@ -12,17 +12,22 @@ import { Food } from '../CalorieCalculation/FoodInterface';
 interface FoodContextType {
 	foods: Food[];
 	addFood: (food: Food) => void;
+	addWater: (water: number) => void;
 	fetchFoods: () => void;
+	waterIntake: number;
 }
 
 const FoodContext = createContext<FoodContextType>({
 	foods: [],
 	addFood: () => {},
+	addWater: () => {},
 	fetchFoods: () => {},
+	waterIntake: 0,
 });
 
 export const FoodProvider = ({ children }: { children: ReactNode }) => {
 	const [foods, setFoods] = useState<Food[]>([]);
+	const [waterIntake, setWaterIntake] = useState<number>(0);
 	const foodService = new FoodService();
 
 	useEffect(() => {
@@ -40,6 +45,10 @@ export const FoodProvider = ({ children }: { children: ReactNode }) => {
 		);
 	};
 
+	const addWater = (water: number) => {
+		setWaterIntake(water);
+	};
+
 	const addFood = async (food: Food) => {
 		try {
 			await foodService.createFood(food);
@@ -49,7 +58,9 @@ export const FoodProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 	return (
-		<FoodContext.Provider value={{ foods, addFood, fetchFoods }}>
+		<FoodContext.Provider
+			value={{ foods, addFood, fetchFoods, addWater, waterIntake }}
+		>
 			{children}
 		</FoodContext.Provider>
 	);

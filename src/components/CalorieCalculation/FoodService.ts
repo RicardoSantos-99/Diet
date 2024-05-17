@@ -1,3 +1,4 @@
+import { User } from 'firebase/auth';
 import { Food } from './FoodInterface';
 
 class FoodService {
@@ -15,7 +16,11 @@ class FoodService {
 		}
 	}
 
-	async saveDiet(selectedFoods: Food[]): Promise<void> {
+	async saveDiet(
+		selectedFoods: Food[],
+		userId: String,
+		water: Number,
+	): Promise<void> {
 		try {
 			const response = await fetch(
 				'http://localhost:4000/api/user_foods',
@@ -24,7 +29,11 @@ class FoodService {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({ foods: selectedFoods }),
+					body: JSON.stringify({
+						foods: selectedFoods,
+						user: userId,
+						total_water: water,
+					}),
 				},
 			);
 

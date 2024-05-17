@@ -40,11 +40,7 @@ const Register = () => {
 		}
 
 		try {
-			const userCreated = await createUserWithEmailAndPassword(
-				auth,
-				email,
-				password,
-			);
+			await createUserWithEmailAndPassword(auth, email, password);
 			navigate('/');
 		} catch (err) {
 			const errorMessage =

@@ -22,8 +22,13 @@ const MainMenu = () => {
 				<Link as={RouterLink} to="/" fontWeight="bold" mx={2}>
 					Home
 				</Link>
-				<Link as={RouterLink} to="/alimentos" fontWeight="bold" mx={2}>
-					Alimentos
+				<Link
+					as={RouterLink}
+					to="/recommendation"
+					fontWeight="bold"
+					mx={2}
+				>
+					Recomendações
 				</Link>
 				<Link as={RouterLink} to="/receitas" fontWeight="bold" mx={2}>
 					Receitas

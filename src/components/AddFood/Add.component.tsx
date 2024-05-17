@@ -47,9 +47,6 @@ const FormAdd = () => {
 			return;
 		}
 
-		const user: User = auth.currentUser;
-		console.log(user);
-
 		const foodData = {
 			name: foodName,
 			calories: parseFloat(calories),
