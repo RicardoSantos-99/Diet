@@ -1,3 +1,4 @@
+import { User } from 'firebase/auth';
 import { Food } from './FoodInterface';
 
 class FoodService {
@@ -11,15 +12,15 @@ class FoodService {
 			const { data } = await response.json();
 			return Array.isArray(data) ? data : this.getFoodFromMock();
 		} catch (error) {
-			console.error(
-				'There was a problem with your fetch operation:',
-				error,
-			);
 			return this.getFoodFromMock();
 		}
 	}
 
-	async saveDiet(selectedFoods: Food[]): Promise<void> {
+	async saveDiet(
+		selectedFoods: Food[],
+		userId: String,
+		water: Number,
+	): Promise<void> {
 		try {
 			const response = await fetch(
 				'http://localhost:4000/api/user_foods',
@@ -28,19 +29,18 @@ class FoodService {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({ foods: selectedFoods }),
+					body: JSON.stringify({
+						foods: selectedFoods,
+						user: userId,
+						total_water: water,
+					}),
 				},
 			);
 
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-		} catch (error) {
-			console.error(
-				'There was a problem with your fetch operation:',
-				error,
-			);
-		}
+		} catch (error) {}
 	}
 
 	async createFood(food: Food): Promise<Food> {

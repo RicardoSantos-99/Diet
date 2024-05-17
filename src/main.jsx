@@ -1,24 +1,39 @@
 import ReactDOM from 'react-dom/client';
-import MainMenu from './components/MainMenu/MainMenu.component';
-import FormAdd from './components/AddFood/Add.component';
-import CalorieCalculation from './components/CalorieCalculation/CalorieCalculation.component';
 import { ChakraProvider } from '@chakra-ui/react';
 import './index.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import SignIn from './pages/SignIn';
+import Register from './pages/Register';
+import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
-import { FoodProvider } from './components/MainMenu/foodContext';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainMenu from './components/MainMenu/MainMenu.component';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
 	<Router>
 		<ChakraProvider>
-			<FoodProvider>
-				<Routes>
-					<Route path="/" element={<MainMenu />} />
-					<Route path="/login" />
-				</Routes>
-				<FormAdd />
-				<CalorieCalculation />
-			</FoodProvider>
+			<Routes>
+				<Route path="/sign-in" element={<SignIn />} />
+				<Route path="/register" element={<Register />} />
+				<Route
+					path="/"
+					element={
+						<ProtectedRoute>
+							<Home />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/recommendation"
+					element={
+						<ProtectedRoute>
+							<MainMenu />
+						</ProtectedRoute>
+					}
+				/>
+			</Routes>
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

@@ -1,40 +1,51 @@
 import React from 'react';
-import {
-	MainContainer,
-	Container,
-	Logo,
-	Menu,
-	Login,
-	Titles,
-	ContainerLogin,
-} from './MainMenu.styled';
+import { Button, Flex, Image, Link, Spacer } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import NutriPlan from '../../assets/nutriplan.png';
-import { Link } from 'react-router-dom';
+
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase-config';
 
 const MainMenu = () => {
+	const navigate = useNavigate();
+	const handleLogout = async () => {
+		signOut(auth);
+
+		navigate('/sign-in');
+	};
 	return (
-		<MainContainer>
-			<Container>
-				<Logo src={NutriPlan} />
-				<Menu>
-					<Titles>
-						<Link to="/">Home</Link>
-					</Titles>
-					<Titles>
-						<Link to="/alimentos">Alimentos</Link>
-					</Titles>
-					<Titles>
-						<Link to="/receitas">Receitas</Link>
-					</Titles>
-					<Titles>Receitas</Titles>
-					<ContainerLogin>
-						<Login>
-							<Link to="/login">Login</Link>
-						</Login>
-					</ContainerLogin>
-				</Menu>
-			</Container>
-		</MainContainer>
+		<Flex as="nav" align="center" justify="center" p={4} bg="gray.100">
+			<Image src={NutriPlan} alt="NutriPlan Logo" h="50px" ml={4} />
+			<Spacer />
+			<Flex as="div" align="center" mr={4}>
+				<Link as={RouterLink} to="/" fontWeight="bold" mx={2}>
+					Home
+				</Link>
+				<Link
+					as={RouterLink}
+					to="/recommendation"
+					fontWeight="bold"
+					mx={2}
+				>
+					Recomendações
+				</Link>
+				<Link as={RouterLink} to="/receitas" fontWeight="bold" mx={2}>
+					Receitas
+				</Link>
+
+				<Button
+					p={2}
+					border="1px"
+					borderColor="gray.200"
+					borderRadius="md"
+					mx={2}
+					onClick={handleLogout}
+				>
+					Sair
+				</Button>
+			</Flex>
+		</Flex>
 	);
 };
 

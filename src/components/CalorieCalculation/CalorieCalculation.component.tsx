@@ -8,9 +8,11 @@ import { useFood } from '../MainMenu/foodContext';
 import FoodService from './FoodService';
 import FoodCard from '../AddFood/FoodCard.component';
 import NutritionTable from '../AddFood/NutritionTable.component';
+import { User } from 'firebase/auth';
+import { auth } from '../../firebase-config';
 
 const CalorieCalculation = () => {
-	const { foods } = useFood();
+	const { foods, waterIntake } = useFood();
 	const [selectedFoods, setSelectedFoods] = useState<ExtendedFood[]>([]);
 	const foodService = new FoodService();
 
@@ -18,9 +20,11 @@ const CalorieCalculation = () => {
 		setSelectedFoods(selectedItems);
 	}, []);
 
+	const user: User = auth.currentUser;
+
 	const saveDiet = useCallback(async () => {
 		try {
-			await foodService.saveDiet(selectedFoods);
+			await foodService.saveDiet(selectedFoods, user.uid, waterIntake);
 			toast.success('Dieta salva com sucesso!');
 		} catch (error) {
 			toast.error('Houve um erro ao salvar a dieta.');
