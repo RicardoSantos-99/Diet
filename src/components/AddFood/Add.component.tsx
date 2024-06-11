@@ -12,8 +12,6 @@ import {
 	Input,
 } from '@chakra-ui/react';
 import { useFood } from '../MainMenu/foodContext';
-import { auth } from '../../firebase-config';
-import { User } from 'firebase/auth';
 
 const FormAdd = () => {
 	const { addFood } = useFood();

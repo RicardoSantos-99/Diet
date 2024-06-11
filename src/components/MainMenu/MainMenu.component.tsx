@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Flex, Image, Link, Spacer } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import NutriPlan from '../../assets/nutriplan.png';
@@ -22,16 +21,22 @@ const MainMenu = () => {
 				<Link as={RouterLink} to="/" fontWeight="bold" mx={2}>
 					Home
 				</Link>
+
 				<Link
 					as={RouterLink}
-					to="/recommendation"
+					to="/recomendacoes"
 					fontWeight="bold"
 					mx={2}
 				>
 					Recomendações
 				</Link>
+
 				<Link as={RouterLink} to="/receitas" fontWeight="bold" mx={2}>
 					Receitas
+				</Link>
+
+				<Link as={RouterLink} to="/profile" fontWeight="bold" mx={2}>
+					Perfil
 				</Link>
 
 				<Button

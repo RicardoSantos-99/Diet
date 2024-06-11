@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import Select from 'react-select';
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { ExtendedFood } from './FoodInterface';
@@ -19,9 +19,7 @@ const CalorieCalculation = () => {
 	const handleSelectChange = useCallback((selectedItems: any) => {
 		setSelectedFoods(selectedItems);
 	}, []);
-
 	const user: User = auth.currentUser;
-
 	const saveDiet = useCallback(async () => {
 		try {
 			await foodService.saveDiet(selectedFoods, user.uid, waterIntake);

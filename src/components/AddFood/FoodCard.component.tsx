@@ -1,5 +1,4 @@
 import { Box, Flex, Grid, Text } from '@chakra-ui/react';
-
 import 'react-toastify/dist/ReactToastify.css';
 import { ExtendedFood } from '../CalorieCalculation/FoodInterface';
 import FoodService from '../CalorieCalculation/FoodService';
